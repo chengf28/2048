@@ -18,10 +18,11 @@ for(let i = 0;i<num;i++)
         border[i][j] = 0;
     }
 }
-createNum(border, num, 2, marginWidth, boxWidth);
+createNum(border, num, 3, marginWidth, boxWidth);
+console.table(border);
+background(border,marginWidth, boxWidth);
+Down(border, num);
 // 绘制背景
-background(num, marginWidth, boxWidth);
-
 function load()
 {
     document.onkeydown = function (event) {
@@ -41,6 +42,7 @@ function load()
                 break;
             // 下
             case 40:
+                Down(border,num);
                 break;
         }
     }; 
