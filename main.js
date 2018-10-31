@@ -9,25 +9,28 @@ var num          = 4;
 var boxWidth     = (width-marginWidth*(num+1))/num;
 var context      = tag.getContext("2d");
 // 创建空数组
-let border = [];
+let border  = [];
 for(let i = 0;i<num;i++)
 {
-    border[i] = [];
+    border[i]  = [];
     for(let j = 0 ; j <num ; j++)
     {
-        border[i][j] = 0;
+        border[i][j]  = 0;
     }
 }
-createNum(border, num, 3, marginWidth, boxWidth);
+createNum(border, num, 4, marginWidth, boxWidth);
 console.table(border);
 background(border,marginWidth, boxWidth);
-Down(border, num);
+Up(border, num);
+console.table(border);
+
 // 绘制背景
 function load()
 {
-    document.onkeydown = function (event) {
-        var e = event || window.event || arguments.callee.caller.arguments[0];
-        key = e.keyCode;
+    document.onkeydown = function (event) 
+    {
+        var e   = event || window.event || arguments.callee.caller.arguments[0];
+        var key = e.keyCode;
         
         switch (key) 
         {

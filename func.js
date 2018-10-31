@@ -12,17 +12,6 @@ function background(border,margin,width)
             drawBox(positionX, positionY, width, setColor(num), num);
         })
     });
-
-    // for(let i = 0;i < 4 ; i++)
-    // {
-    //     for (let j = 0; j < 4; j++)
-    //     {
-           
-           
-    //         positionY += width;
-    //     }
-        
-    // }
 }
 
 function drawBox(x,y,width,color="#fff",num)
@@ -74,7 +63,7 @@ function createNum(border,num,times=1,margin,width)
             {
                 // 随机x位置
                 // let randX = parseInt(Math.floor(Math.random() * num));
-                let randX = 1;
+                let randX = 0;
                 // 随机y位置
                 let randY = parseInt(Math.floor(Math.random() * num));
                 // 设置随机值
@@ -111,42 +100,67 @@ function Down(border,length)
 {
     for (let i = 0; i < length; i++) 
     {
-        // for(let j = 0 ; j<length ; j++)
+        // 从下往上一次增加
         for (let j = length-1 ; j > -1; j--) 
         {
+            // 如果是0 则跳过判断
             if (border[i][j] != 0) 
             {
-                for(let k = j+1; k < length;k++)
-                // for(let k = 0; k < j  ; k++)
+                // 以当前最底下位开始,直到j位之间遍历判断
+                for(let k = length-1; k > j; k--)
                 {
-                    if (border[i][k] == border[i][j] && noBlock(i, k, j)) 
-                    {
-                        border[i][k] += border[i][j];
-                        border[i][j] = 0;
-                        continue;
-                    }else if(border[i][k] == 0 && noBlock(i,k,j))
+                    // 如果 K 位 为0时,判断J与K之间是否有非零位阻挡,则K位(0位)替换为J值,j位清空
+                    if(border[i][k] == 0 && noBlock(i,j,k,1)) 
                     {
                         border[i][k] = border[i][j];
                         border[i][j] = 0;
-                            continue;
+                        continue;
+                    }
+                    // 如果k位于当前j位的值相同,且2者之间没有非零位阻挡,则K位相加,j位清空
+                    if (border[i][k] == border[i][j] && noBlock(i, j, k,1)) {
+                        border[i][k] += border[i][j];
+                        border[i][j] = 0;
+                        continue;
                     }
                 }
             }
         }
     }
-    console.table(border);
 }
 
 
-function noBlock(i,col,nowCol)
+function Up(border,length)
 {
-    for(let j = col+1;j<nowCol;j++)
+    for( let i = 0 ; i < length ; i++)
     {
-        console.log(i,j,nowCol,col);
-        if(border[i][j] != 0)
+        // 从上向下遍历
+        for( let j = 0 ; j < length ; j++)
         {
-            return false;
+            if (border[i][j] != 0)
+            {
+               
+            }
         }
     }
-    return true;
+}
+
+function noBlock(i, nowCol, endCol, direction)
+{
+    if (direction = 1) 
+    {
+        for (let j = nowCol + 1; j < endCol; j++) {
+            if (border[i][j] != 0) {
+                return false;
+            }
+        }
+        return true;    
+    }else{
+        for (let i = nowCol + 1; i < endCol; i++) 
+        {
+            if (border[i][j] != 0) {
+                return false;
+            }
+        }
+        return true;    
+    }
 }
