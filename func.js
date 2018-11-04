@@ -129,18 +129,40 @@ function Down(border,length)
 }
 
 
-function Up(border,length)
+function Up(border)
 {
-    for( let i = 0 ; i < length ; i++)
+    for( let i = 0 ; i < border.length ; i++)
     {
-        // 从上向下遍历
-        for( let j = 0 ; j < length ; j++)
+        // 从上向下遍历(排除第一位)
+        for( let j = 1 ; j < border[i].length ; j++)
         {
-            if (border[i][j] != 0)
+            if(border[i][j-1] == border[i][j] && border[i][j] != 0)
             {
-               
+                border[i][j-1] += border[i][j];
+                into(border,i,j,length);
+                continue;
+            }
+            if (border[i][j-1] == 0) 
+            {
+                border[i][j-1] = border[i][j];
+                into(border,i,j);
+                continue;
             }
         }
+    }
+}
+
+function into(border,i,j)
+{
+    for(let k = j; k < border[i].length; k++)
+    {
+        if ( !border[i].hasOwnProperty(k+1))
+        {
+            border[i][k] = 0;
+        }else{
+            border[i][k] = border[i][k+1];
+        }
+        
     }
 }
 

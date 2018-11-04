@@ -18,10 +18,10 @@ for(let i = 0;i<num;i++)
         border[i][j]  = 0;
     }
 }
-createNum(border, num, 4, marginWidth, boxWidth);
+createNum(border, num, 3, marginWidth, boxWidth);
 console.table(border);
 background(border,marginWidth, boxWidth);
-Up(border, num);
+Up(border);
 console.table(border);
 
 // 绘制背景
@@ -32,7 +32,7 @@ function load()
         var e   = event || window.event || arguments.callee.caller.arguments[0];
         var key = e.keyCode;
         
-        switch (key) 
+        switch (key)
         {
             // 左
             case 37:
