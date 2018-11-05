@@ -2,7 +2,7 @@ function background(border,margin,width)
 {
     let positionX = 0;
     let positionY = 0;
-
+    context.clearRect(0, 0, width, width);
     border.forEach(function(arr,i)
     {
         arr.forEach(function(num,j)
@@ -18,7 +18,6 @@ function drawBox(x,y,width,color="#fff",num)
 {
     let radius = width * 0.07;
     context.beginPath();
-    context.clearRect(x,y,width, width);
     context.fillStyle = color;
     context.moveTo(x, y);
     context.arcTo(x + width, y, x + width, y + width, radius);
@@ -69,7 +68,7 @@ function createNum(border,num,times=1,margin,width)
                 // 设置随机值
                 if(border[randX][randY] == 0)
                 {
-                    border[randX][randY] = Math.random() < .5 ? 2 : 4;
+                    border[randX][randY] = Math.random() < .5 ? 2 : 2;
                     break;
                 }
                 // randY = 2;
@@ -96,73 +95,136 @@ function checkSpace(border)
     
 }
 
-function Down(border,length)
-{
-    for (let i = 0; i < length; i++) 
-    {
-        // 从下往上一次增加
-        for (let j = length-1 ; j > -1; j--) 
+function Down(Matrix) {
+    for (let i = 0; i < Matrix.length; i++) {
+        // 从上向下遍历(排除第一位)
+        for (let j = Matrix[i].length-1; j >= 0; j--) 
         {
-            // 如果是0 则跳过判断
-            if (border[i][j] != 0) 
+            // 当前位置为0时处理
+            if (Matrix[i][j] == 0) {
+                breakZero(Matrix, i, j, 'down');
+            }
+            // 上一位为0,直接上移
+            if (Matrix[i][j + 1] == 0) {
+                Matrix[i][j + 1] = Matrix[i][j];
+                into(Matrix, i, j, 'down');
+                continue;
+            }
+            // 上一位与当前位相等且不为0 ,上一位x2,其他上移
+            if (Matrix[i][j + 1] == Matrix[i][j] && Matrix[i][j] != 0) {
+                Matrix[i][j + 1] += Matrix[i][j];
+                into(Matrix, i, j, 'down');
+                continue;
+            }
+        }
+    }
+}
+
+
+function Up(Matrix)
+{
+    for( let i = 0 ; i < Matrix.length ; i++)
+    {
+        // 从上向下遍历(排除第一位)
+        for( let j = 0 ; j < Matrix[i].length ; j++)
+        {
+            // 当前位置为0时处理
+            if (Matrix[i][j] == 0) 
             {
-                // 以当前最底下位开始,直到j位之间遍历判断
-                for(let k = length-1; k > j; k--)
+                breakZero(Matrix, i, j, 'up');
+            }
+            // 上一位为0,直接上移
+            if (Matrix[i][j - 1] == 0) 
+            {
+                Matrix[i][j - 1] = Matrix[i][j];
+                into(Matrix, i, j, 'up');
+                continue;
+            }
+            // 上一位与当前位相等且不为0 ,上一位x2,其他上移
+            if(Matrix[i][j-1] == Matrix[i][j] && Matrix[i][j] != 0)
+            {
+                Matrix[i][j-1] += Matrix[i][j];
+                into(Matrix, i, j, 'up');
+                continue;
+            }
+        }
+    }
+}
+
+function into(arr, i, j, direction)
+{
+    if (direction == 'up') 
+    {
+        for (let k = j; k < arr[i].length; k++) 
+        {
+            if (!arr[i].hasOwnProperty(k + 1)) 
+            {
+                arr[i][k] = 0;
+            } else {
+                arr[i][k] = arr[i][k + 1];
+            }
+        }
+    }
+    if (direction == 'down') 
+    {
+        for (let k = j; k >=0 ; k--)
+        {
+            if (!arr[i].hasOwnProperty(k - 1)) 
+            {
+                arr[i][k] = 0;
+            } else {
+                arr[i][k] = arr[i][k - 1];
+            }
+        }
+    }
+}
+
+function breakZero(arr, i, j, direction)
+{
+    if (direction == 'up') 
+    {
+        for (let k = j+1; k < arr[i].length; k++) 
+        {
+            if(arr[i][k] != 0)
+            {
+                if(arr[i][j-1] == arr[i][k])
                 {
-                    // 如果 K 位 为0时,判断J与K之间是否有非零位阻挡,则K位(0位)替换为J值,j位清空
-                    if(border[i][k] == 0 && noBlock(i,j,k,1)) 
-                    {
-                        border[i][k] = border[i][j];
-                        border[i][j] = 0;
-                        continue;
-                    }
-                    // 如果k位于当前j位的值相同,且2者之间没有非零位阻挡,则K位相加,j位清空
-                    if (border[i][k] == border[i][j] && noBlock(i, j, k,1)) {
-                        border[i][k] += border[i][j];
-                        border[i][j] = 0;
-                        continue;
-                    }
+                    arr[i][j-1] += arr[i][k];
+                    arr[i][k]   =  0;
+                    break;
+                }else if(arr[i][j-1] != 0)
+                {
+                    arr[i][j] = arr[i][k];
+                    arr[i][k] = 0;
+                    break;
+                }else{
+                    arr[i][j-1] = arr[i][k];
+                    arr[i][k] = 0;
                 }
             }
         }
     }
-}
-
-
-function Up(border)
-{
-    for( let i = 0 ; i < border.length ; i++)
+    if (direction == 'down') 
     {
-        // 从上向下遍历(排除第一位)
-        for( let j = 1 ; j < border[i].length ; j++)
+        for (let k = j - 1; k >= 0 ; k--) 
         {
-            if(border[i][j-1] == border[i][j] && border[i][j] != 0)
-            {
-                border[i][j-1] += border[i][j];
-                into(border,i,j,length);
-                continue;
-            }
-            if (border[i][j-1] == 0) 
-            {
-                border[i][j-1] = border[i][j];
-                into(border,i,j);
-                continue;
+            if (arr[i][k] != 0) {
+                if (arr[i][j + 1] == arr[i][k]) {
+                    arr[i][j + 1] += arr[i][k];
+                    arr[i][k] = 0;
+                    break;
+                } else if (arr[i][j + 1] != 0) {
+                    arr[i][j] = arr[i][k];
+                    arr[i][k] = 0;
+                    break;
+                } else 
+                {
+                    arr[i][j + 1] = arr[i][k];
+                    arr[i][k]     = 0;
+                    // break;
+                }
             }
         }
-    }
-}
-
-function into(border,i,j)
-{
-    for(let k = j; k < border[i].length; k++)
-    {
-        if ( !border[i].hasOwnProperty(k+1))
-        {
-            border[i][k] = 0;
-        }else{
-            border[i][k] = border[i][k+1];
-        }
-        
     }
 }
 

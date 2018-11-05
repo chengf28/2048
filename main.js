@@ -5,7 +5,7 @@ var height       = parent.clientHeight;
 tag.width        = width;
 tag.height       = height;
 var marginWidth  = 10;
-var num          = 4;
+var num          = 8;
 var boxWidth     = (width-marginWidth*(num+1))/num;
 var context      = tag.getContext("2d");
 // 创建空数组
@@ -18,10 +18,10 @@ for(let i = 0;i<num;i++)
         border[i][j]  = 0;
     }
 }
-createNum(border, num, 3, marginWidth, boxWidth);
+createNum(border, num, 4, marginWidth, boxWidth);
 console.table(border);
 background(border,marginWidth, boxWidth);
-Up(border);
+// Up(border);
 console.table(border);
 
 // 绘制背景
@@ -31,7 +31,6 @@ function load()
     {
         var e   = event || window.event || arguments.callee.caller.arguments[0];
         var key = e.keyCode;
-        
         switch (key)
         {
             // 左
@@ -39,14 +38,16 @@ function load()
                 break;
             // 上
             case 38:
+                Up(border);
                 break;
             // 右
             case 39:
                 break;
             // 下
             case 40:
-                Down(border,num);
+                Down(border);
                 break;
         }
+        background(border, marginWidth, boxWidth);
     }; 
 }
