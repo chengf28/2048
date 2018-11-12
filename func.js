@@ -35,22 +35,50 @@ function drawBox(x,y,width,color="#fff",num)
 
 }
 
-function setColor(num)
+function setColor(number)
 {
-    let tmp = Math.exp(num);
-    if (num > 0) 
-    {
-        tmp = tmp.toString().slice(-6);    
-    }else{
-        tmp  = 'fff';
+    switch (number) {
+        case 2:
+            return '#96cccc';
+            break;
+        case 4:
+            return '#60cccc';
+            break;
+        case 8:
+            return '#60fccc';
+            break;
+        case 16:
+            return '#60fc00';
+            break;
+        case 32:
+            return '#fff300';
+            break;
+        case 64:
+            return '#ffab00';
+            break;
+        case 128:
+            return '#ff8100';
+            break;
+        case 256:
+            return '#ff4b00';
+            break;
+        case 512:
+            return '#d51b00';
+            break;
+        case 1024:
+            return '#451b00';
+            break;
+        case 2048:
+            return '#151b00';
+            break;
     }
-    return "#"+tmp;
+    return "#fff";
     
 }
 /**
  * 创建数字
  */
-function createNum(border,num,times=1,margin,width)
+function createNum(border,num,times=1)
 {
     // 检查是否还有空余的格子
     for(let i = 0 ; i < times;i++ )
@@ -61,19 +89,21 @@ function createNum(border,num,times=1,margin,width)
             while( true )
             {
                 // 随机x位置
-                // let randX = parseInt(Math.floor(Math.random() * num));
-                let randX = 0;
+                let randX = parseInt(Math.floor(Math.random() * num));
+                // let randX = 0;
                 // 随机y位置
                 let randY = parseInt(Math.floor(Math.random() * num));
                 // 设置随机值
                 if(border[randX][randY] == 0)
                 {
-                    border[randX][randY] = Math.random() < .5 ? 2 : 2;
+                    border[randX][randY] = Math.random() < .5 ? 2: 4;
                     break;
                 }
                 // randY = 2;
             }
-        } 
+        }else{
+            alert("game over");
+        }
     }
     
 }
@@ -95,27 +125,56 @@ function checkSpace(border)
     
 }
 
-function Down(Matrix) {
-    for (let i = 0; i < Matrix.length; i++) {
+function Down(Matrix) 
+{
+    for (let i = 0; i < Matrix.length; i++) 
+    {
         // 从上向下遍历(排除第一位)
         for (let j = Matrix[i].length-1; j >= 0; j--) 
         {
-            // 当前位置为0时处理
-            if (Matrix[i][j] == 0) {
-                breakZero(Matrix, i, j, 'down');
-            }
-            // 上一位为0,直接上移
-            if (Matrix[i][j + 1] == 0) {
-                Matrix[i][j + 1] = Matrix[i][j];
-                into(Matrix, i, j, 'down');
-                continue;
-            }
-            // 上一位与当前位相等且不为0 ,上一位x2,其他上移
-            if (Matrix[i][j + 1] == Matrix[i][j] && Matrix[i][j] != 0) {
-                Matrix[i][j + 1] += Matrix[i][j];
-                into(Matrix, i, j, 'down');
-                continue;
-            }
+            for(let k = j-1 ; k >= 0 ; k--)
+            {
+                if (Matrix[i][k] == 0) 
+                {
+                    continue;
+                }
+                if (Matrix[i][k] != Matrix[i][j]  ) 
+                {
+                    if (Matrix[i][j] == 0) 
+                    {
+                        for (let n = k - 1; n >= -1; n--) {
+                            // 到达边界
+                            if (!Matrix[i].hasOwnProperty(n)) {
+                                Matrix[i][j] = Matrix[i][k];
+                                Matrix[i][k] = 0;
+                                break;
+                            }
+                            if (Matrix[i][n] == 0) {
+                                continue;
+                            }
+                            if (Matrix[i][n] == Matrix[i][k]) {
+                                Matrix[i][j] = Matrix[i][n] * 2;
+                                Matrix[i][k] = 0;
+                                Matrix[i][n] = 0;
+                                break;
+                            }
+                            if (Matrix[i].hasOwnProperty(n) && Matrix[i][n] != Matrix[i][k] && Matrix[i][j] == 0) {
+                                Matrix[i][j] = Matrix[i][k];
+                                Matrix[i][k] = 0;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    break;
+                }
+                if (Matrix[i][k] == Matrix[i][j] ) 
+                {
+                    Matrix[i][j] += Matrix[i][k];
+                    Matrix[i][k] = 0;
+                    break;
+                }
+           }
         }
     }
 }
@@ -125,126 +184,159 @@ function Up(Matrix)
 {
     for( let i = 0 ; i < Matrix.length ; i++)
     {
-        // 从上向下遍历(排除第一位)
+        // 从上向下遍历
         for( let j = 0 ; j < Matrix[i].length ; j++)
         {
-            // 当前位置为0时处理
-            if (Matrix[i][j] == 0) 
+            for (let k = j+1; k < Matrix[i].length; k++) 
             {
-                breakZero(Matrix, i, j, 'up');
-            }
-            // 上一位为0,直接上移
-            if (Matrix[i][j - 1] == 0) 
-            {
-                Matrix[i][j - 1] = Matrix[i][j];
-                into(Matrix, i, j, 'up');
-                continue;
-            }
-            // 上一位与当前位相等且不为0 ,上一位x2,其他上移
-            if(Matrix[i][j-1] == Matrix[i][j] && Matrix[i][j] != 0)
-            {
-                Matrix[i][j-1] += Matrix[i][j];
-                into(Matrix, i, j, 'up');
-                continue;
-            }
-        }
-    }
-}
-
-function into(arr, i, j, direction)
-{
-    if (direction == 'up') 
-    {
-        for (let k = j; k < arr[i].length; k++) 
-        {
-            if (!arr[i].hasOwnProperty(k + 1)) 
-            {
-                arr[i][k] = 0;
-            } else {
-                arr[i][k] = arr[i][k + 1];
-            }
-        }
-    }
-    if (direction == 'down') 
-    {
-        for (let k = j; k >=0 ; k--)
-        {
-            if (!arr[i].hasOwnProperty(k - 1)) 
-            {
-                arr[i][k] = 0;
-            } else {
-                arr[i][k] = arr[i][k - 1];
-            }
-        }
-    }
-}
-
-function breakZero(arr, i, j, direction)
-{
-    if (direction == 'up') 
-    {
-        for (let k = j+1; k < arr[i].length; k++) 
-        {
-            if(arr[i][k] != 0)
-            {
-                if(arr[i][j-1] == arr[i][k])
+                
+                if (Matrix[i][k] == 0) 
                 {
-                    arr[i][j-1] += arr[i][k];
-                    arr[i][k]   =  0;
-                    break;
-                }else if(arr[i][j-1] != 0)
-                {
-                    arr[i][j] = arr[i][k];
-                    arr[i][k] = 0;
-                    break;
-                }else{
-                    arr[i][j-1] = arr[i][k];
-                    arr[i][k] = 0;
+                    continue;
                 }
-            }
-        }
-    }
-    if (direction == 'down') 
-    {
-        for (let k = j - 1; k >= 0 ; k--) 
-        {
-            if (arr[i][k] != 0) {
-                if (arr[i][j + 1] == arr[i][k]) {
-                    arr[i][j + 1] += arr[i][k];
-                    arr[i][k] = 0;
-                    break;
-                } else if (arr[i][j + 1] != 0) {
-                    arr[i][j] = arr[i][k];
-                    arr[i][k] = 0;
-                    break;
-                } else 
+                if (Matrix[i][k] != Matrix[i][j] ) 
                 {
-                    arr[i][j + 1] = arr[i][k];
-                    arr[i][k]     = 0;
-                    // break;
+
+                    if (Matrix[i][j] == 0 ) 
+                    {
+                        for (let n = k + 1; n <= Matrix[i].length; n++) {
+                            // 到达边界
+                            if (!Matrix[i].hasOwnProperty(n)) {
+                                Matrix[i][j] = Matrix[i][k];
+                                Matrix[i][k] = 0;
+                                break;
+                            }
+                            if (Matrix[i][n] == 0) {
+                                continue;
+                            }
+                            if (Matrix[i][n] == Matrix[i][k]) {
+                                Matrix[i][j] = Matrix[i][n] * 2;
+                                Matrix[i][k] = 0;
+                                Matrix[i][n] = 0;
+                                break;
+                            }
+                            if (Matrix[i].hasOwnProperty(n) && Matrix[i][n] != Matrix[i][k]) {
+                                Matrix[i][j] = Matrix[i][k];
+                                Matrix[i][k] = 0;
+                                break;
+                            }
+                        }
+                    }
+                    break;
                 }
+                if (Matrix[i][j] == Matrix[i][k]) 
+                {
+                    Matrix[i][j] += Matrix[i][k];
+                    Matrix[i][k] = 0;
+                    break;
+                }
+                
             }
         }
     }
 }
 
-function noBlock(i, nowCol, endCol, direction)
+
+
+function Left(Matrix) 
 {
-    if (direction = 1) 
-    {
-        for (let j = nowCol + 1; j < endCol; j++) {
-            if (border[i][j] != 0) {
-                return false;
-            }
-        }
-        return true;    
-    }else{
-        for (let i = nowCol + 1; i < endCol; i++) 
+    for (let i = 0; i < Matrix.length; i++) {
+        // 从上向下遍历
+        for (let j = 0; j < Matrix[i].length; j++) 
         {
-            if (border[i][j] != 0) {
-                return false;
+            for (let k = i + 1; k < Matrix.length; k++) 
+            {
+                if (Matrix[k][j] == 0)
+                {
+                    continue;
+                }
+                if (Matrix[k][j] != Matrix[i][j]) 
+                {
+                    if (Matrix[i][j] == 0) 
+                    {
+                        for (let n = k + 1; n <= Matrix.length; n++) 
+                        {
+                            // 到达边界
+                            if (!Matrix.hasOwnProperty(n)) 
+                            {
+                                Matrix[i][j] = Matrix[k][j];
+                                Matrix[k][j] = 0;
+                                break;
+                            }
+                            if (Matrix[n][i] == 0) 
+                            {
+                                continue;
+                            }
+                            if (Matrix[n][j] == Matrix[k][j]) {
+                                Matrix[i][j] = Matrix[n][j] * 2;
+                                Matrix[k][j] = 0;
+                                Matrix[n][j] = 0;
+                                break;
+                            }
+                            if (Matrix.hasOwnProperty(n) && Matrix[n][j] != Matrix[k][j]) 
+                            {
+                                Matrix[i][j] = Matrix[k][j];
+                                Matrix[k][j] = 0;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                if (Matrix[i][j] == Matrix[k][j]) {
+                    Matrix[i][j] += Matrix[k][j];
+                    Matrix[k][j] = 0;
+                    break;
+                }
+
             }
         }
-        return true;    
+    }
+}
+
+function Right(Matrix) {
+    for (let i = Matrix.length-1; i >= 0; i--) {
+        // 从上向下遍历
+        for (let j = 0; j < Matrix[i].length; j++) {
+            for (let k = i - 1; k >= 0; k--) {
+                if (Matrix[k][j] == 0) {
+                    continue;
+                }
+                if (Matrix[k][j] != Matrix[i][j]) {
+                    if (Matrix[i][j] == 0) {
+                        for (let n = k - 1; n >= -1; n--) 
+                        {
+                            // 到达边界
+                            if (!Matrix.hasOwnProperty(n)) {
+                                Matrix[i][j] = Matrix[k][j];
+                                Matrix[k][j] = 0;
+                                break;
+                            }
+                            if (Matrix[n][i] == 0) {
+                                continue;
+                            }
+                            if (Matrix[n][j] == Matrix[k][j]) {
+                                Matrix[i][j] = Matrix[n][j] * 2;
+                                Matrix[k][j] = 0;
+                                Matrix[n][j] = 0;
+                                break;
+                            }
+                            if (Matrix.hasOwnProperty(n) && Matrix[n][j] != Matrix[k][j]) {
+                                Matrix[i][j] = Matrix[k][j];
+                                Matrix[k][j] = 0;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }
+                if (Matrix[i][j] == Matrix[k][j]) {
+                    Matrix[i][j] += Matrix[k][j];
+                    Matrix[k][j] = 0;
+                    break;
+                }
+
+            }
+        }
     }
 }

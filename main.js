@@ -5,7 +5,7 @@ var height       = parent.clientHeight;
 tag.width        = width;
 tag.height       = height;
 var marginWidth  = 10;
-var num          = 8;
+var num          = 4;
 var boxWidth     = (width-marginWidth*(num+1))/num;
 var context      = tag.getContext("2d");
 // 创建空数组
@@ -18,11 +18,8 @@ for(let i = 0;i<num;i++)
         border[i][j]  = 0;
     }
 }
-createNum(border, num, 4, marginWidth, boxWidth);
-console.table(border);
+createNum(border, num, 2);
 background(border,marginWidth, boxWidth);
-// Up(border);
-console.table(border);
 
 // 绘制背景
 function load()
@@ -35,19 +32,31 @@ function load()
         {
             // 左
             case 37:
+                Left(border);
+                reDraw();
                 break;
             // 上
             case 38:
                 Up(border);
+                reDraw();
                 break;
             // 右
             case 39:
+                Right(border);
+                reDraw();
                 break;
             // 下
             case 40:
                 Down(border);
+                reDraw();
                 break;
         }
-        background(border, marginWidth, boxWidth);
     }; 
+}
+
+
+function reDraw()
+{
+    createNum(border, num, 1);
+    background(border, marginWidth, boxWidth);    
 }
