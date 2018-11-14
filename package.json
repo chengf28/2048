@@ -1,0 +1,30 @@
+{
+  "name": "2048",
+  "version": "1.0.0",
+  "description": "2048测试",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chengf28/2048.git"
+  },
+  "keywords": [
+    "game",
+    "2048"
+  ],
+  "author": "天才纸尿裤",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/chengf28/2048/issues"
+  },
+  "homepage": "https://github.com/chengf28/2048#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-loader": "^8.0.4",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "webpack": "^4.25.1"
+  }
+}
