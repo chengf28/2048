@@ -8,3 +8,4 @@
    * viewController.js 为视图Canvas计算
 * dist/ 存放编译后的项目
  
+<font color='red'>※注意:上线部署应该去除webpack.config.js中的devtool在编译</font>
