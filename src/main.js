@@ -1,65 +1,48 @@
 import gameController from "./gameController";
-let t = new gameController(1,2);
-t.test('asdasd');
-// var tag          = document.getElementById('canvas');
-// var parent       = tag.parentNode;
-// var width        = parent.clientWidth;
-// var height       = parent.clientHeight;
-// tag.width        = width;
-// tag.height       = height;
-// var marginWidth  = 10;
-// var num          = 4;
-// var boxWidth     = (width-marginWidth*(num+1))/num;
-// var context      = tag.getContext("2d");
-// // 创建空数组
-// let border  = [];
-// for(let i = 0;i<num;i++)
-// {
-//     border[i]  = [];
-//     for(let j = 0 ; j <num ; j++)
-//     {
-//         border[i][j]  = 0;
-//     }
-// }
-// createNum(border, num, 2);
-// background(border,marginWidth, boxWidth);
-
-// // 绘制背景
-// function load()
-// {
-//     document.onkeydown = function (event) 
-//     {
-//         var e   = event || window.event || arguments.callee.caller.arguments[0];
-//         var key = e.keyCode;
-//         switch (key)
-//         {
-//             // 左
-//             case 37:
-//                 Left(border);
-//                 reDraw();
-//                 break;
-//             // 上
-//             case 38:
-//                 Up(border);
-//                 reDraw();
-//                 break;
-//             // 右
-//             case 39:
-//                 Right(border);
-//                 reDraw();
-//                 break;
-//             // 下
-//             case 40:
-//                 Down(border);
-//                 reDraw();
-//                 break;
-//         }
-//     }; 
-// }
+import viewController from "./viewController";
+let game = new gameController(4);
+game.createNum(2);
+let tag          = document.getElementById('canvas');
+let parent       = tag.parentNode;
+let width        = parent.clientWidth;
+let height       = parent.clientHeight;
+tag.width        = width;
+tag.height       = height;
+let view  = new viewController(tag,width,game.num);
+view.background(game.border);
 
 
-// function reDraw()
-// {
-//     createNum(border, num, 1);
-//     background(border, marginWidth, boxWidth);    
-// }
+    document.onkeydown = function (event) 
+    {
+        var e   = event || window.event || arguments.callee.caller.arguments[0];
+        var key = e.keyCode;
+        switch (key)
+        {
+            // 左
+            case 37:
+                game.Left();
+                reDraw();
+                break;
+            // 上
+            case 38:
+                game.Up();
+                reDraw();
+                break;
+            // 右
+            case 39:
+                game.Right();
+                reDraw();
+                break;
+            // 下
+            case 40:
+                game.Down();
+                reDraw();
+                break;
+        }
+    }; 
+
+function reDraw()
+{
+    game.createNum(1);
+    view.background(game.border);
+}

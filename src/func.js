@@ -73,7 +73,6 @@ function setColor(number)
             break;
     }
     return "#fff";
-    
 }
 /**
  * 创建数字
@@ -105,7 +104,6 @@ function createNum(border,num,times=1)
             alert("game over");
         }
     }
-    
 }
 
 function checkSpace(border)
