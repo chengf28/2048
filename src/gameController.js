@@ -55,7 +55,13 @@ class gameController
                     // randY = 2;
                 }
             } else {
-                alert("game over");
+                var r = confirm("游戏结束")
+                if (r == true) {
+                    window.location.href = location.href;   
+                }
+                else {
+                    window.location.href = location.href;   
+                }
             }
         }
     }

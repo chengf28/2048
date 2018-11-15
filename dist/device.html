@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title>Document</title>
+</head>
+<body>
+	<div id="box">
+	</div>
+</body>
+<script>
+	var box = document.getElementById('box');
+	var index = 0;
+    // 监听陀螺仪
+	if (window.DeviceMotionEvent) 
+	{
+		window.addEventListener('deviceorientation', deviceMotionHandler, false);
+	} else {
+		alert('当前浏览器不支持 重力感应,抱歉');
+	}
+	var Direction = {
+    up:0,
+    down:0,
+    left:0,
+    right:0
+};
+	var limit = 20;
+	var start = {
+		x:0,
+		y:0,
+	}
+	function deviceMotionHandler(event)
+	{
+		index++;
+		var beta = Math.ceil(event.beta);
+		if (start.x == 0) 
+		{
+			start.x = beta;
+		}
+		var node = document.createElement('div');
+		node.textContent = index + '手机当前beta值' + beta + ' betafirst:' + Direction.up;
+		tip(node);
+
+		if (beta < start.x - limit) 
+		{
+			if ( Direction.up - limit > beta && Direction.up+limit < beta  ) 
+			{
+				return;
+			}
+			
+			Direction.up = beta;
+			node.textContent = '执行一次向上'+ exitTime;
+			tip(node);
+
+		}
+		if (beta > start.x + limit) 
+		{
+			if (Direction.up - limit < beta && Direction.up + limit > beta) {
+				return;
+			}
+			var now = new Date();
+			var exitTime = new Date().getTime() + 1000;	
+			Direction.up =beta;
+			node.textContent = '执行一次向下'+ exitTime;
+			tip(node);
+		}
+		/* 向上
+		if(beta < -2 ) 
+		{
+			Direction.up++;
+			if (Direction.up  >= 150) 
+			{
+				node.textContent = index + '手机当前beta值' + beta + ' betafirst:' + Direction.up;
+				tip(node);
+				Direction.up = 0;
+				Direction.down = 0;
+			}
+			
+		}
+		if (beta > 1 && beta < 10) 
+		{
+			Direction.down++;
+			if (Direction.down >= 15) {
+				node.textContent = index + '手机当前beta值' + beta + ' betafirst:' + Direction.down;
+				tip(node);
+				Direction.down = 0;
+				Direction.up = 0;
+			}
+		}*/
+
+		
+		// else if (beta > 0 && beta - Direction.down >= limit) {
+		// 	node.textContent = index + '手机当前beta值' + beta + ' betafirst:' + Direction.down
+		// 	tip(node);
+		// 	Direction.down = beta;
+		// 	Direction.up = 0;
+		// }
+		
+	}
+	
+	function tip(node)
+	{
+		if (box.children.length < 1) {
+			box.appendChild(node);
+		} else {
+			box.insertBefore(node, box.children[0]);
+		}
+	}
+
+</script>
+</html>
